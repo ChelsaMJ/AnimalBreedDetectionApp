@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "462158876313",
+    "project_id": "animalbreeddetectionapp",
+    "storage_bucket": "animalbreeddetectionapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462158876313:android:5b537e95636145b2eaf208",
+        "android_client_info": {
+          "package_name": "com.example.animalbreeddetectionapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1gpj0l3ACQ-Vk3xSj-8KJp8BuYKjHNbk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
