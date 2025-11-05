@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FAFAFA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:gravity="center_horizontal">
+
+        <!-- 🔄 Lottie Animation (AI Analyzing) -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieView"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            app:lottie_rawRes="@raw/ai_scanning"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+
+        <!-- 🧠 Result Card -->
+        <LinearLayout
+            android:id="@+id/resultCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="@drawable/rounded_card_bg"
+            android:elevation="6dp"
+            android:layout_marginTop="24dp"
+            android:animateLayoutChanges="true">
+
+            <TextView
+                android:id="@+id/tvBreedResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🐾 AI will identify your animal breed here!"
+                android:textColor="#212121"
+                android:textSize="17sp"
+                android:lineSpacingExtra="4dp"
+                android:textAlignment="center"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- 💬 Repurposed Fun Fact Button -->
+        <Button
+            android:id="@+id/btnAskMore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Fun Fact 🐾"
+            android:textAllCaps="false"
+            android:layout_marginTop="25dp"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#FFFFFF"
+            android:visibility="gone"
+            android:fontFamily="sans-serif-medium" />
+
+    </LinearLayout>
+</ScrollView>

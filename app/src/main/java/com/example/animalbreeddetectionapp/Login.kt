@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.animalbreeddetectionapp.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
-import kotlin.jvm.java
 
 class Login : AppCompatActivity() {
 
@@ -19,6 +18,12 @@ class Login : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+
+        // 🔄 Auto-login check (if user somehow reaches here while logged in)
+        auth.currentUser?.let {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
 
         // Login Button
         binding.loginBtn.setOnClickListener {
@@ -37,7 +42,7 @@ class Login : AppCompatActivity() {
                         } else {
                             Toast.makeText(
                                 this,
-                                "Login failed! Please signup first.",
+                                "Login failed! Please sign up first.",
                                 Toast.LENGTH_LONG
                             ).show()
                             startActivity(Intent(this, Signup::class.java))
