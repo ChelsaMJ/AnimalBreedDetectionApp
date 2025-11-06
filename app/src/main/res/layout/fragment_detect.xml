@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FBF7FB"
+    android:background="@color/white"
     android:padding="18dp"
     android:fillViewport="true">
 
@@ -31,7 +31,7 @@
             android:layout_height="220dp"
             android:layout_marginTop="12dp"
             android:layout_gravity="center"
-            android:src="@drawable/placeholder"
+            android:src="@drawable/ic_camera"
             android:background="@drawable/home_card_bg"
             android:padding="8dp"
             android:scaleType="centerCrop" />
@@ -54,7 +54,7 @@
                 android:text="Capture"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#6C4DC8"
+                android:backgroundTint="@color/pink"
                 android:fontFamily="sans-serif-medium" />
 
             <View
@@ -69,7 +69,7 @@
                 android:text="Gallery"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:backgroundTint="#6C4DC8"
+                android:backgroundTint="@color/muted_text"
                 android:fontFamily="sans-serif-medium" />
         </LinearLayout>
 
@@ -81,7 +81,7 @@
             android:text="Detect Breed"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:backgroundTint="#4CAF50"
+            android:backgroundTint="@color/black"
             android:layout_marginTop="24dp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-medium" />

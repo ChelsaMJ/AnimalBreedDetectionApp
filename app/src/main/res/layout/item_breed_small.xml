@@ -12,7 +12,7 @@
         android:id="@+id/iv_small"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:src="@drawable/placeholder"
+        android:src="@drawable/ic_camera"
         android:scaleType="centerCrop"
         android:background="@drawable/circle_bg"/>
 
