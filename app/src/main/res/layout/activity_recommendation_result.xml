@@ -3,7 +3,7 @@
     android:id="@+id/scroll_reco"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="18dp"
+    android:padding="30dp"
     android:background="@color/white"
     android:fillViewport="true">
 
