@@ -1,123 +1,271 @@
 package com.example.animalbreeddetectionapp.dashboard
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.animalbreeddetectionapp.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.TimeUnit
 
 class RecommendationResultActivity : AppCompatActivity() {
 
-    private lateinit var imgMain: ImageView
-    private lateinit var tvBreed: TextView
-    private lateinit var tvMatch: TextView
-    private lateinit var tvHeightVal: TextView
-    private lateinit var tvWeightVal: TextView
-    private lateinit var tvLifeVal: TextView
-    private lateinit var tvGoodWith: TextView
-    private lateinit var tvTemp: TextView
-    private lateinit var tvCareTip: TextView
-    private lateinit var btnDone: Button
-    private lateinit var btnBack: Button
+    private lateinit var tvBreedName: TextView
+    private lateinit var tvScientificName: TextView
+    private lateinit var tvDescription: TextView
+    private lateinit var tvCareTips: TextView
+    private lateinit var tvEnvironment: TextView
+    private lateinit var tvFallbackNotice: TextView
+    private lateinit var progressBar: ProgressBar
+
+    private val TAG = "RecommendationResult"
+    private var apiKey: String = "AIzaSyAqpImKx05neQux_JzmWNzfK6qDhKkpcJw"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recommendation_result)
 
-        imgMain = findViewById(R.id.img_reco_main)
-        tvBreed = findViewById(R.id.tv_reco_breed)
-        tvMatch = findViewById(R.id.tv_reco_match)
-        tvHeightVal = findViewById(R.id.tv_height_val)
-        tvWeightVal = findViewById(R.id.tv_weight_val)
-        tvLifeVal = findViewById(R.id.tv_life_val)
-        tvGoodWith = findViewById(R.id.tv_good_with)
-        tvTemp = findViewById(R.id.tv_temperament)
-        tvCareTip = findViewById(R.id.tv_care_tip)
-        btnDone = findViewById(R.id.btn_done_reco)
-        btnBack = findViewById(R.id.btn_back_reco)
+        tvBreedName = findViewById(R.id.tv_breed_name)
+        tvScientificName = findViewById(R.id.tv_scientific_name)
+        tvDescription = findViewById(R.id.tv_description)
+        tvCareTips = findViewById(R.id.tv_care_tips)
+        tvEnvironment = findViewById(R.id.tv_environment)
+        tvFallbackNotice = findViewById(R.id.tv_fallback_notice)
+        progressBar = findViewById(R.id.progress_bar)
 
-        btnBack.setOnClickListener { finish() }
-        btnDone.setOnClickListener { finish() }
+        val filtersJson = intent.getStringExtra("filtersJson") ?: "{}"
+        apiKey = intent.getStringExtra("apiKey") ?: ""
 
-        val aiText = intent.getStringExtra("aiText")
-        if (aiText.isNullOrBlank()) {
-            // nothing — show placeholder
-            tvBreed.text = "No recommendation"
-            return
-        }
+        tvBreedName.text = "Analyzing recommendations..."
+        progressBar.visibility = View.VISIBLE
 
-        // Try parse JSON first (we requested JSON). Fallback to text parsing.
-        try {
-            val obj = JSONObject(aiText)
-            fillFromJson(obj)
-        } catch (e: Exception) {
-            // fallback: try to extract simple lines
-            fallbackFromText(aiText)
-        }
-    }
+        lifecycleScope.launch {
+            try {
+                val filtersObj = JSONObject(filtersJson)
+                val prompt = buildPromptFromFilters(filtersObj)
 
-    private fun fillFromJson(o: JSONObject) {
-        val breed = o.optString("breed", "Unknown")
-        val match = o.optString("match_percent", "")
-        val summary = o.optString("summary", "")
-        val maintenance = o.optString("maintenance", "")
-        val price = o.optString("price_range", "")
-        val height = o.optString("height", "")
-        val weight = o.optString("weight", "")
-        val lifespan = o.optString("lifespan", "")
-        val goodWith = if (o.has("good_with")) o.optJSONArray("good_with") else null
-        val temperament = if (o.has("temperament")) o.optJSONArray("temperament") else null
-        val careTip = o.optString("care_tip", "")
+                if (apiKey.isBlank()) {
+                    // If you store key in Constants, update performApiCall to use it instead of passed apiKey
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@RecommendationResultActivity, "API key missing — add in ExploreFragment or use secure store.", Toast.LENGTH_LONG).show()
+                    }
+                    val fallback = buildLocalRecommendationJSON(filtersObj)
+                    withContext(Dispatchers.Main) {
+                        progressBar.visibility = View.GONE
+                        parseFallbackJson(fallback.toString())
+                        tvFallbackNotice.text = "Local fallback (no API key)."
+                    }
+                    return@launch
+                }
 
-        tvBreed.text = breed
-        tvMatch.text = if (match.isNotBlank()) match else ""
-        tvHeightVal.text = if (height.isNotBlank()) height else "-"
-        tvWeightVal.text = if (weight.isNotBlank()) weight else "-"
-        tvLifeVal.text = if (lifespan.isNotBlank()) lifespan else "-"
-        tvCareTip.text = if (careTip.isNotBlank()) careTip else "-"
-        // join arrays
-        if (goodWith != null) {
-            val arr = mutableListOf<String>()
-            for (i in 0 until goodWith.length()) arr.add(goodWith.optString(i))
-            tvGoodWith.text = arr.joinToString(", ")
-        }
-        if (temperament != null) {
-            val arr = mutableListOf<String>()
-            for (i in 0 until temperament.length()) arr.add(temperament.optString(i))
-            tvTemp.text = arr.joinToString(", ")
-        }
-        // placeholder image; you may replace with a real image later
-        imgMain.setImageResource(R.drawable.placeholder)
-    }
+                val responseJson = withContext(Dispatchers.IO) {
+                    performApiCall(prompt, apiKey)
+                }
 
-    private fun fallbackFromText(text: String) {
-        // crude extraction using labels
-        tvBreed.text = extractAfterLabel(text, listOf("breed:", "breed name:", "name:")) ?: "Breed"
-        tvMatch.text = extractAfterLabel(text, listOf("match_percent:", "match %:", "match:")) ?: ""
-        tvHeightVal.text = extractAfterLabel(text, listOf("height:")) ?: "-"
-        tvWeightVal.text = extractAfterLabel(text, listOf("weight:")) ?: "-"
-        tvLifeVal.text = extractAfterLabel(text, listOf("lifespan:", "life span:")) ?: "-"
-        tvCareTip.text = extractAfterLabel(text, listOf("care tip:", "care_tip:", "care:")) ?: "-"
-        tvGoodWith.text = extractAfterLabel(text, listOf("good with:", "good_with:")) ?: "-"
-        tvTemp.text = extractAfterLabel(text, listOf("temperament:")) ?: "-"
-        imgMain.setImageResource(R.drawable.placeholder)
-    }
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    processAiResponse(responseJson, filtersObj)
+                }
 
-    private fun extractAfterLabel(text: String, labels: List<String>): String? {
-        val lower = text.toLowerCase()
-        for (label in labels) {
-            val idx = lower.indexOf(label)
-            if (idx >= 0) {
-                val start = idx + label.length
-                val rest = text.substring(start).trim()
-                // stop at newline if present
-                val end = rest.indexOf("\n")
-                return if (end >= 0) rest.substring(0, end).trim() else rest.trim()
+            } catch (e: Exception) {
+                Log.e(TAG, "AI call failed", e)
+                val fallback = buildLocalRecommendationJSON(JSONObject(intent.getStringExtra("filtersJson") ?: "{}"))
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    parseFallbackJson(fallback.toString())
+                    tvFallbackNotice.text = "AI error: ${e.message}"
+                }
             }
         }
-        return null
+    }
+
+    private fun buildPromptFromFilters(filters: JSONObject): String {
+        val animalType = filters.optString("animalType", "animal").trim()
+        val filtersPretty = filters.toString(2)
+        val systemInstruction = """
+You are an animal breed/species recommendation expert.
+
+Primary input: the user wants recommendations for this animal type: "$animalType".
+
+Using the user's environmental and lifestyle preferences below, recommend the single most suitable breed, variety, or species (or mix) for that animal type and return a short, clean, concise summary.
+
+Your response MUST follow this exact format (no numbering, no emojis, no markdown, no extra lines):
+
+Breed Name: <breed name>
+Scientific Name: <scientific name, if known>
+Description: <one short paragraph describing key features and behavior>
+Care Tips: <one short line with basic care tip>
+
+Filters:
+$filtersPretty
+
+Keep the whole response under 5 lines. Use direct, minimal language.
+""".trimIndent()
+        return systemInstruction
+    }
+
+    private fun performApiCall(prompt: String, apiKey: String): JSONObject {
+        val contentsArray = JSONArray()
+        val contentObj = JSONObject()
+        val partsArray = JSONArray()
+        val partObj = JSONObject()
+        partObj.put("text", prompt)
+        partsArray.put(partObj)
+        contentObj.put("parts", partsArray)
+        contentsArray.put(contentObj)
+        val payload = JSONObject()
+        payload.put("contents", contentsArray)
+
+        val apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$apiKey"
+        val url = URL(apiUrl)
+        val connection = (url.openConnection() as HttpURLConnection).apply {
+            requestMethod = "POST"
+            setRequestProperty("Content-Type", "application/json; charset=utf-8")
+            connectTimeout = TimeUnit.SECONDS.toMillis(30).toInt()
+            readTimeout = TimeUnit.SECONDS.toMillis(60).toInt()
+            doOutput = true
+        }
+
+        connection.outputStream.use { os ->
+            val bytes = payload.toString().toByteArray(StandardCharsets.UTF_8)
+            os.write(bytes, 0, bytes.size)
+            os.flush()
+        }
+
+        try {
+            val responseCode = connection.responseCode
+            val respText = if (responseCode in 200..299) {
+                connection.inputStream.bufferedReader().use { it.readText() }
+            } else {
+                val err = connection.errorStream?.bufferedReader()?.use { it.readText() } ?: "Unknown error body"
+                throw Exception("API returned code $responseCode: $err")
+            }
+            return JSONObject(respText)
+        } finally {
+            connection.disconnect()
+        }
+    }
+
+    private fun processAiResponse(response: JSONObject, filters: JSONObject) {
+        try {
+            val candidates = response.optJSONArray("candidates")
+            val rawText = if (candidates != null && candidates.length() > 0) {
+                val candidate = candidates.getJSONObject(0)
+                val content = candidate.optJSONObject("content")
+                val parts = content?.optJSONArray("parts")
+                if (parts != null && parts.length() > 0) {
+                    parts.getJSONObject(0).optString("text", "")
+                } else {
+                    candidate.optString("text", "")
+                }
+            } else {
+                response.optString("output", response.toString())
+            }
+
+            // Parse expected 4-line format
+            val lines = rawText.trim().lines().map { it.trim() }.filter { it.isNotEmpty() }
+            var bn = ""
+            var sn = ""
+            var desc = ""
+            var care = ""
+            lines.forEach { line ->
+                when {
+                    line.startsWith("Breed Name:", ignoreCase = true) -> bn = line.substringAfter(":").trim()
+                    line.startsWith("Scientific Name:", ignoreCase = true) -> sn = line.substringAfter(":").trim()
+                    line.startsWith("Description:", ignoreCase = true) -> desc = line.substringAfter(":").trim()
+                    line.startsWith("Care Tips:", ignoreCase = true) -> care = line.substringAfter(":").trim()
+                }
+            }
+
+            if (bn.isNotBlank() || desc.isNotBlank()) {
+                tvBreedName.text = bn.ifBlank { "Recommendation" }
+                tvScientificName.text = sn.ifBlank { "—" }
+                tvDescription.text = desc.ifBlank { "—" }
+                tvCareTips.text = care.ifBlank { "—" }
+                tvEnvironment.text = "" // optional: you can show filters here if you want
+                tvFallbackNotice.text = ""
+            } else {
+                // If parsing failed, show raw text in description
+                tvBreedName.text = "Recommendation"
+                tvScientificName.text = ""
+                tvDescription.text = rawText
+                tvCareTips.text = ""
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            tvFallbackNotice.text = "Error parsing AI response: ${e.message}"
+        }
+    }
+
+    private fun parseFallbackJson(jsonStr: String) {
+        try {
+            val jo = JSONObject(jsonStr)
+            val breed = jo.optString("breed", "—")
+            val careTip = jo.optString("care_tip", jo.optString("careTip", "—"))
+            val match = jo.optInt("match", -1)
+            tvBreedName.text = breed
+            tvScientificName.text = "—"
+            tvDescription.text = if (match >= 0) "Match score: $match/100" else ""
+            tvCareTips.text = careTip
+            val env = jo.optJSONObject("environment")
+            env?.let {
+                val climate = it.optString("climate", "—")
+                val living = it.optString("living_space", it.optString("livingSpace", "—"))
+                val allergies = it.optBoolean("allergies", false)
+                val noise = it.optString("noise", "—")
+                tvEnvironment.text = "Environment — Climate: $climate | Living: $living | Allergies: $allergies | Noise: $noise"
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            tvFallbackNotice.text = "Error parsing fallback data."
+        }
+    }
+
+    private fun buildLocalRecommendationJSON(filters: JSONObject): JSONObject {
+        val animalType = filters.optString("animalType", "animal")
+        val size = filters.optString("size", "Any")
+        val coat = filters.optString("coat", "Any")
+        val activity = filters.optString("activity", "Any")
+        val climate = filters.optString("climate", "Any")
+        val living = filters.optString("livingSpace", "Any")
+        val allergies = filters.optBoolean("allergies", false)
+        val noise = filters.optString("noise", "Any")
+        val maxPrice = filters.optInt("maxPrice", 5000)
+
+        val recommendation = JSONObject()
+        val breedName = when {
+            animalType.contains("cat", ignoreCase = true) && size == "Small" -> "Domestic Shorthaired Cat"
+            animalType.contains("cat", ignoreCase = true) && allergies -> "Sphynx / Hypoallergenic breed"
+            animalType.contains("dog", ignoreCase = true) && size == "Small" && activity == "Low" -> "Shih Tzu"
+            animalType.contains("dog", ignoreCase = true) && size == "Large" -> "Golden Retriever"
+            animalType.contains("fish", ignoreCase = true) || animalType.contains("aquatic", ignoreCase = true) -> "Community tropical fish"
+            animalType.contains("tarantula", ignoreCase = true) || animalType.contains("spider", ignoreCase = true) -> "Tarantula (care specialized)"
+            else -> "${animalType.capitalize()} (Mixed breed/variety)"
+        }
+        recommendation.put("breed", breedName)
+        recommendation.put("match", 70)
+        recommendation.put("maintenance", if (activity == "High" || coat == "Long") "High" else "Medium")
+        recommendation.put("price_range", "₹0 - ₹${maxPrice + 2000}")
+        val env = JSONObject().apply {
+            put("climate", climate)
+            put("living_space", living)
+            put("allergies", allergies)
+            put("noise", noise)
+        }
+        recommendation.put("environment", env)
+        recommendation.put("care_tip", "Provide appropriate habitat and care for $animalType; follow species-specific guidelines.")
+        return recommendation
     }
 }

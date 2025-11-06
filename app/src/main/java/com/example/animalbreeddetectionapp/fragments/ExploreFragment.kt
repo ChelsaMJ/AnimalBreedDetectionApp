@@ -5,121 +5,89 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.animalbreeddetectionapp.R
-import com.example.animalbreeddetectionapp.dashboard.RecommendationResultActivity
-import com.example.animalbreeddetectionapp.network.GeminiApi
 import org.json.JSONObject
 
 class ExploreFragment : Fragment() {
 
-    private lateinit var spSpace: Spinner
+    private lateinit var etAnimalType: EditText
+    private lateinit var spSize: Spinner
+    private lateinit var spCoat: Spinner
+    private lateinit var spActivity: Spinner
     private lateinit var spClimate: Spinner
-    private lateinit var spPetType: Spinner
-    private lateinit var spEnergy: Spinner
-    private lateinit var spMaintenance: Spinner
+    private lateinit var spLivingSpace: Spinner
+    private lateinit var switchAllergies: Switch
+    private lateinit var spNoise: Spinner
+    private lateinit var seekPrice: SeekBar
+    private lateinit var tvPriceValue: TextView
     private lateinit var btnFind: Button
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    // Optionally put a key for quick test, or leave blank and use Constants/secure store
+    private val apiKeyForThisRun: String = "AIzaSyAqpImKx05neQux_JzmWNzfK6qDhKkpcJw" // set if you want quick in-fragment key injection
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_explore, container, false)
 
-        spSpace = view.findViewById(R.id.sp_space)
+        // NEW: text input for animal type
+        etAnimalType = view.findViewById(R.id.et_animal_type)
+        spSize = view.findViewById(R.id.sp_size)
+        spCoat = view.findViewById(R.id.sp_coat)
+        spActivity = view.findViewById(R.id.sp_activity)
         spClimate = view.findViewById(R.id.sp_climate)
-        spPetType = view.findViewById(R.id.sp_pet_type)
-        spEnergy = view.findViewById(R.id.sp_energy)
-        spMaintenance = view.findViewById(R.id.sp_maintenance)
+        spLivingSpace = view.findViewById(R.id.sp_living_space)
+        switchAllergies = view.findViewById(R.id.switch_allergies)
+        spNoise = view.findViewById(R.id.sp_noise)
+        seekPrice = view.findViewById(R.id.seek_price)
+        tvPriceValue = view.findViewById(R.id.tv_price_value)
         btnFind = view.findViewById(R.id.btn_find_breeds)
 
-        // simple adapters
-        spSpace.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item,
-            listOf("Apartment", "House small yard", "House large yard"))
-        spClimate.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item,
-            listOf("Hot", "Cold", "Moderate"))
-        spPetType.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item,
-            listOf("Dog", "Cat", "Other"))
-        spEnergy.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item,
-            listOf("Low", "Medium", "High"))
-        spMaintenance.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item,
-            listOf("Low", "Medium", "High"))
+        val sizeOptions = listOf("Any", "Small", "Medium", "Large", "Giant")
+        val coatOptions = listOf("Any", "Short", "Medium", "Long", "Hypoallergenic", "Wire")
+        val activityOptions = listOf("Any", "Low", "Moderate", "High", "Very High")
+        val climateOptions = listOf("Any", "Hot", "Temperate", "Cold", "Humid")
+        val livingSpaceOptions = listOf("Any", "Apartment (no yard)", "Apartment (with balcony)", "House with small yard", "House with large yard", "Farm/rural")
+        val noiseOptions = listOf("Any", "Very quiet", "Quiet", "Average", "Noisy household")
+
+        spSize.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, sizeOptions)
+        spCoat.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, coatOptions)
+        spActivity.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, activityOptions)
+        spClimate.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, climateOptions)
+        spLivingSpace.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, livingSpaceOptions)
+        spNoise.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, noiseOptions)
+
+        tvPriceValue.text = "₹${seekPrice.progress}"
+        seekPrice.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
+                tvPriceValue.text = "₹$progress"
+            }
+            override fun onStartTrackingTouch(sb: SeekBar?) {}
+            override fun onStopTrackingTouch(sb: SeekBar?) {}
+        })
 
         btnFind.setOnClickListener {
-            val prefs = HashMap<String, String>()
-            prefs["space"] = spSpace.selectedItem.toString()
-            prefs["climate"] = spClimate.selectedItem.toString()
-            prefs["petType"] = spPetType.selectedItem.toString()
-            prefs["energy"] = spEnergy.selectedItem.toString()
-            prefs["maintenance"] = spMaintenance.selectedItem.toString()
+            val animalTypeInput = etAnimalType.text.toString().trim().ifEmpty { "Any" } // default
+            val filters = JSONObject().apply {
+                put("animalType", animalTypeInput)
+                put("size", spSize.selectedItem as String)
+                put("coat", spCoat.selectedItem as String)
+                put("activity", spActivity.selectedItem as String)
+                put("climate", spClimate.selectedItem as String)
+                put("livingSpace", spLivingSpace.selectedItem as String)
+                put("allergies", switchAllergies.isChecked)
+                put("noise", spNoise.selectedItem as String)
+                put("maxPrice", seekPrice.progress)
+            }
 
-            val prompt = buildJsonPrompt(prefs)
-
-            Toast.makeText(requireContext(), "Finding recommendations…", Toast.LENGTH_SHORT).show()
-
-            GeminiApi.generateText(prompt, { aiReply ->
-                // aiReply should be JSON string per prompt
-                requireActivity().runOnUiThread {
-                    try {
-                        // quick validation — if parseable JSON, pass along
-                        JSONObject(aiReply)
-                        val intent = Intent(requireContext(), RecommendationResultActivity::class.java)
-                        intent.putExtra("aiText", aiReply)
-                        startActivity(intent)
-                    } catch (e: Exception) {
-                        // fallback: pass raw text
-                        val intent = Intent(requireContext(), RecommendationResultActivity::class.java)
-                        intent.putExtra("aiText", aiReply)
-                        startActivity(intent)
-                    }
-                }
-            }, { error ->
-                requireActivity().runOnUiThread {
-                    Toast.makeText(requireContext(), "AI Error: $error", Toast.LENGTH_LONG).show()
-                }
-            })
+            val intent = Intent(requireContext(), com.example.animalbreeddetectionapp.dashboard.RecommendationResultActivity::class.java).apply {
+                putExtra("filtersJson", filters.toString())
+                putExtra("apiKey", apiKeyForThisRun)
+            }
+            startActivity(intent)
         }
 
         return view
-    }
-
-    private fun buildJsonPrompt(p: HashMap<String, String>): String {
-        val petType = p["petType"] ?: "dog"
-        val space = p["space"] ?: "apartment"
-        val climate = p["climate"] ?: "moderate"
-        val energy = p["energy"] ?: "medium"
-        val maintenance = p["maintenance"] ?: "medium"
-
-        // Request JSON response to make parsing deterministic
-        return """
-            You are an expert in pet breed recommendations. The user preferences are:
-            - pet_type: $petType
-            - living_space: $space
-            - climate: $climate
-            - energy_level: $energy
-            - maintenance_preference: $maintenance
-
-            Please respond with a single JSON object (no extra text) with keys:
-            {
-              "breed": "<best breed name>",
-              "match_percent": "<number or percent>",
-              "summary": "<one-line summary>",
-              "maintenance": "<Low/Medium/High>",
-              "price_range": "<INR range e.g. ₹8,000-15,000>",
-              "height": "<e.g. 9-10.5 in>",
-              "weight": "<e.g. 9-16 lb>",
-              "lifespan": "<e.g. 10-18 years>",
-              "good_with": ["Children","Seniors","Dogs","Cats"],
-              "temperament": ["Friendly","Outgoing"],
-              "care_tip": "<one sentence>"
-            }
-
-            Only return the JSON object — no additional commentary or text.
-        """.trimIndent()
     }
 }

@@ -1,238 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scroll_reco"
+    android:id="@+id/scroll_recommendation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="30dp"
-    android:background="@color/white"
-    android:fillViewport="true">
+    android:background="@android:color/white">
 
     <LinearLayout
-        android:id="@+id/ll_root_reco"
         android:orientation="vertical"
         android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content">
 
-        <!-- 🔹 Back Button -->
-        <Button
-            android:id="@+id/btn_back_reco"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:text="&lt;"
-            android:textSize="18sp"
-            android:textColor="#2E1E5B"
-            android:backgroundTint="@android:color/white"
-            android:layout_marginBottom="8dp" />
-
-        <!-- 🔹 Circular Pet Image -->
-        <ImageView
-            android:id="@+id/img_reco_main"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_camera"
-            android:scaleType="centerCrop"
-            android:background="@drawable/circle_bg"
-            android:layout_marginTop="8dp" />
-
-        <!-- 🔹 Breed Name & Match -->
-        <LinearLayout
-            android:id="@+id/card_name"
+        <TextView
+            android:id="@+id/tv_reco_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical"
-            android:padding="14dp"
-            android:gravity="center_horizontal"
-            android:background="@drawable/home_card_bg">
+            android:text="Breed Recommended"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
 
-            <TextView
-                android:id="@+id/tv_reco_breed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Breed Name"
-                android:textSize="18sp"
-                android:fontFamily="@font/abril_fatface"
-                android:textColor="#2E1E5B" />
+        <androidx.cardview.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardCornerRadius="12dp"
+            card_view:cardElevation="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:padding="12dp">
 
-            <TextView
-                android:id="@+id/tv_reco_match"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Match %"
-                android:textSize="13sp"
-                android:textColor="#6A5D7B"
-                android:fontFamily="@font/acme"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:padding="10dp"
+                android:background="@color/lilac"
+                android:layout_height="wrap_content">
 
-                android:layout_marginTop="6dp" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_breed_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Breed Name"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-        <!-- 🔹 Breed Stats Row -->
+                <TextView
+                    android:id="@+id/tv_scientific_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Scientific Name"
+                    android:textSize="13sp"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="4dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E6E6E6"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:id="@+id/tv_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="Short description about breed, temperament, and suitability for user's environment."
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="3dp" />
+
+                <TextView
+                    android:id="@+id/tv_care_tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Care Tips: Daily walks, grooming, vet checkups."
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_environment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="13sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp" />
+
+                <TextView
+                    android:id="@+id/tv_fallback_notice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="13sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp"
-            android:weightSum="3">
+            android:gravity="center_vertical"
+            android:weightSum="2"
+            android:layout_marginTop="8dp">
 
-            <!-- Height -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:padding="8dp"
-                android:background="@drawable/home_card_bg">
 
-                <TextView
-                    android:id="@+id/tv_height"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Height"
-                    android:fontFamily="@font/abril_fatface"
-                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_height_val"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/acme"
-                    android:text="--" />
-            </LinearLayout>
-
-            <!-- Weight -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:padding="8dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/home_card_bg">
-
-                <TextView
-                    android:id="@+id/tv_weight"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Weight"
-                    android:fontFamily="@font/abril_fatface"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_weight_val"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/acme"
-                    android:text="--" />
-            </LinearLayout>
-
-            <!-- Life Span -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:padding="8dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/home_card_bg">
-
-                <TextView
-                    android:id="@+id/tv_life"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/acme"
-                    android:text="Life Span"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_life_val"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/acme"
-                    android:text="--" />
-            </LinearLayout>
         </LinearLayout>
 
-        <!-- 🔹 About / Temperament / Care Tip -->
-        <LinearLayout
-            android:id="@+id/card_about"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical"
-            android:padding="12dp"
-            android:background="@drawable/home_card_bg">
-
-            <TextView
-                android:id="@+id/tv_about_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/acme"
-                android:text="Good With"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_good_with"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:fontFamily="@font/acme"
-                android:text="Children, Seniors, Dogs, Cats" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
-
-            <TextView
-                android:id="@+id/tv_temp_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/acme"
-                android:text="Temperament"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_temperament"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:fontFamily="@font/acme"
-                android:text="Friendly, Outgoing, Playful" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
-
-            <TextView
-                android:id="@+id/tv_care_tip_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/acme"
-                android:text="Care Tip"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_care_tip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:fontFamily="@font/acme"
-                android:text="Keep coat trimmed and daily short walks." />
-        </LinearLayout>
-
-        <!-- 🔹 Done Button -->
-        <Button
-            android:id="@+id/btn_done_reco"
-            android:layout_width="match_parent"
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="48dp"
             android:layout_height="48dp"
-            android:text="Done"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:backgroundTint="@color/pink"
-            android:textColor="#FFFFFF"
+            android:layout_gravity="center"
+            android:visibility="gone"
             android:layout_marginTop="18dp" />
+
+        <View android:layout_width="match_parent" android:layout_height="18dp" />
     </LinearLayout>
 </ScrollView>
