@@ -17,6 +17,7 @@
             android:id="@+id/tvDetectTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/abril_fatface"
             android:text="Detect Animal Breed"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -47,6 +48,7 @@
             <Button
                 android:id="@+id/btnCamera"
                 android:layout_width="0dp"
+
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="Capture"
@@ -89,6 +91,7 @@
             android:id="@+id/tvHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/acme"
             android:text="Upload or capture an animal image to identify its breed."
             android:textSize="13sp"
             android:textColor="#6A5D7B"

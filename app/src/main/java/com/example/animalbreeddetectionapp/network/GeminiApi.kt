@@ -16,12 +16,21 @@ object GeminiApi {
      */
     fun analyzeBreed(imageBase64: String, onResult: (String) -> Unit, onError: (String) -> Unit) {
         val promptText = """
-            You are an animal expert.
-            Identify the animal breed from this image and respond in 3 clear points:
-            1️⃣ Breed Name
-            2️⃣ Short Description
-            3️⃣ Care Tips
-        """.trimIndent()
+You are an animal breed identification expert.
+
+Analyze the given image and return a **short, clean, and concise summary** 
+of the most likely breed or species.
+
+Your response must follow this exact simple format (no numbering, no emojis, no markdown):
+
+Breed Name: <breed name>
+Scientific Name: <scientific name, if known>
+Description: <one short paragraph describing key features and behavior>
+Care Tips: <one short line with basic care tip>
+
+Keep everything under 5 lines. Avoid unnecessary words, emojis, or numbering.
+""".trimIndent()
+
 
         val imageObject = JSONObject()
             .put("inline_data", JSONObject()

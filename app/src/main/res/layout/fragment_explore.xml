@@ -17,6 +17,7 @@
             android:id="@+id/tv_explore_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/abril_fatface"
             android:text="Find Your Perfect Pet"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -25,7 +26,8 @@
         <TextView
             android:id="@+id/tv_explore_sub"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:fontFamily="@font/acme"
+                        android:layout_height="wrap_content"
             android:text="Tell us a few things about your home and lifestyle"
             android:textSize="13sp"
             android:layout_marginTop="6dp"
@@ -33,9 +35,10 @@
 
         <!-- Space -->
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
+            android:fontFamily="@font/acme"
             android:text="Living space" />
         <Spinner
             android:id="@+id/sp_space"
@@ -44,9 +47,10 @@
 
         <!-- Climate -->
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:fontFamily="@font/acme"
             android:text="Climate" />
         <Spinner
             android:id="@+id/sp_climate"
@@ -55,9 +59,10 @@
 
         <!-- Pet type -->
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:fontFamily="@font/acme"
             android:text="Preferred pet type" />
         <Spinner
             android:id="@+id/sp_pet_type"
@@ -66,9 +71,10 @@
 
         <!-- Energy -->
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:fontFamily="@font/acme"
             android:text="Energy level" />
         <Spinner
             android:id="@+id/sp_energy"
@@ -77,9 +83,10 @@
 
         <!-- Maintenance -->
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:fontFamily="@font/acme"
             android:text="Maintenance / Price range" />
         <Spinner
             android:id="@+id/sp_maintenance"

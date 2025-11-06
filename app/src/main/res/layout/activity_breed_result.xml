@@ -8,23 +8,24 @@
     android:fillViewport="true">
 
     <LinearLayout
-        android:id="@+id/root"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
 
         <!-- Header -->
         <TextView
             android:id="@+id/tv_scan_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="@font/abril_fatface"
             android:text="Scanning Result"
-            android:textSize="20sp"
-            android:textStyle="bold"
             android:textColor="#2E1E5B"
-            android:layout_marginTop="6dp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-        <!-- Result card -->
+        <!-- Main Result Card -->
         <LinearLayout
             android:id="@+id/card_top"
             android:layout_width="match_parent"
@@ -35,7 +36,7 @@
             android:background="@drawable/home_card_bg"
             android:elevation="6dp">
 
-            <!-- Centered image -->
+            <!-- Centered Image -->
             <ImageView
                 android:id="@+id/img_main"
                 android:layout_width="160dp"
@@ -52,44 +53,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Breed Name"
+                android:fontFamily="@font/abril_fatface"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#2E1E5B"
-                android:layout_marginTop="6dp" />
+                android:textColor="#2E1E5B" />
 
             <!-- Description -->
             <TextView
                 android:id="@+id/tv_main_sub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Breed description will appear here neatly wrapped and aligned."
-                android:textSize="14sp"
-                android:textColor="#6A5D7B"
+                android:layout_marginHorizontal="6dp"
                 android:layout_marginTop="10dp"
+                android:ellipsize="none"
+                android:fontFamily="@font/acme"
+                android:gravity="start"
                 android:lineSpacingExtra="4dp"
-                android:ellipsize="end"
-                android:maxLines="6" />
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:scrollHorizontally="false"
+                android:text="Detected breed details will appear here."
+                android:textAlignment="viewStart"
+                android:textColor="#6A5D7B"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
-        <!-- 🔹 Smaller detected breed cards (dynamic list) -->
-        <LinearLayout
-            android:id="@+id/ll_breed_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="12dp"
-            android:divider="?android:attr/dividerHorizontal"
-            android:showDividers="middle"
-            android:dividerPadding="8dp" />
-
-        <!-- Buttons -->
+        <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="20dp"
             android:gravity="center">
 
             <Button

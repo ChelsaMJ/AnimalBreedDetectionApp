@@ -10,11 +10,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="@font/acme"
         android:text="Create Account"
-        android:textSize="26sp"
-        android:textStyle="bold"
         android:textColor="@color/black"
-        android:layout_marginBottom="32dp"/>
+        android:textSize="26sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/name"
@@ -47,11 +48,12 @@
 
     <TextView
         android:id="@+id/loginRedirect"
-        android:text="Already have an account? Login"
-        android:textColor="@color/black"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/acme"
+        android:gravity="center"
+        android:text="Already have an account? Login"
+        android:textColor="@color/black" />
 
 </LinearLayout>

@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:text="Breed Name"
                 android:textSize="18sp"
-                android:textStyle="bold"
+                android:fontFamily="@font/abril_fatface"
                 android:textColor="#2E1E5B" />
 
             <TextView
@@ -62,6 +62,8 @@
                 android:text="Match %"
                 android:textSize="13sp"
                 android:textColor="#6A5D7B"
+                android:fontFamily="@font/acme"
+
                 android:layout_marginTop="6dp" />
         </LinearLayout>
 
@@ -87,14 +89,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Height"
+                    android:fontFamily="@font/abril_fatface"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_height_val"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="--"
-                    android:layout_marginTop="4dp" />
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/acme"
+                    android:text="--" />
             </LinearLayout>
 
             <!-- Weight -->
@@ -112,14 +116,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Weight"
+                    android:fontFamily="@font/abril_fatface"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_weight_val"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="--"
-                    android:layout_marginTop="4dp" />
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/acme"
+                    android:text="--" />
             </LinearLayout>
 
             <!-- Life Span -->
@@ -136,6 +142,7 @@
                     android:id="@+id/tv_life"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/acme"
                     android:text="Life Span"
                     android:textStyle="bold" />
 
@@ -143,8 +150,9 @@
                     android:id="@+id/tv_life_val"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="--"
-                    android:layout_marginTop="4dp" />
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/acme"
+                    android:text="--" />
             </LinearLayout>
         </LinearLayout>
 
@@ -162,6 +170,7 @@
                 android:id="@+id/tv_about_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/acme"
                 android:text="Good With"
                 android:textStyle="bold" />
 
@@ -169,8 +178,9 @@
                 android:id="@+id/tv_good_with"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Children, Seniors, Dogs, Cats"
-                android:layout_marginTop="6dp" />
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/acme"
+                android:text="Children, Seniors, Dogs, Cats" />
 
             <View
                 android:layout_width="match_parent"
@@ -180,6 +190,7 @@
                 android:id="@+id/tv_temp_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/acme"
                 android:text="Temperament"
                 android:textStyle="bold" />
 
@@ -187,8 +198,9 @@
                 android:id="@+id/tv_temperament"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Friendly, Outgoing, Playful"
-                android:layout_marginTop="6dp" />
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/acme"
+                android:text="Friendly, Outgoing, Playful" />
 
             <View
                 android:layout_width="match_parent"
@@ -198,6 +210,7 @@
                 android:id="@+id/tv_care_tip_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/acme"
                 android:text="Care Tip"
                 android:textStyle="bold" />
 
@@ -205,8 +218,9 @@
                 android:id="@+id/tv_care_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Keep coat trimmed and daily short walks."
-                android:layout_marginTop="6dp" />
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/acme"
+                android:text="Keep coat trimmed and daily short walks." />
         </LinearLayout>
 
         <!-- 🔹 Done Button -->

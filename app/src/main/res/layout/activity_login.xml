@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Animal Breed Detection"
+        android:fontFamily="@font/abril_fatface"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -42,6 +43,8 @@
         android:id="@+id/signupRedirect"
         android:text="Don’t have an account? Sign up"
         android:textColor="@color/black"
+        android:fontFamily="@font/acme"
+
         android:gravity="center"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
