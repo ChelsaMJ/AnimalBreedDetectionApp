@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_reco"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="18dp"
+    android:background="#FBF7FB"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/ll_root_reco"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- 🔹 Back Button -->
+        <Button
+            android:id="@+id/btn_back_reco"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="&lt;"
+            android:textSize="18sp"
+            android:textColor="#2E1E5B"
+            android:backgroundTint="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 🔹 Circular Pet Image -->
+        <ImageView
+            android:id="@+id/img_reco_main"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/placeholder"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_bg"
+            android:layout_marginTop="8dp" />
+
+        <!-- 🔹 Breed Name & Match -->
+        <LinearLayout
+            android:id="@+id/card_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical"
+            android:padding="14dp"
+            android:gravity="center_horizontal"
+            android:background="@drawable/home_card_bg">
+
+            <TextView
+                android:id="@+id/tv_reco_breed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Breed Name"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#2E1E5B" />
+
+            <TextView
+                android:id="@+id/tv_reco_match"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Match %"
+                android:textSize="13sp"
+                android:textColor="#6A5D7B"
+                android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <!-- 🔹 Breed Stats Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:weightSum="3">
+
+            <!-- Height -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:background="@drawable/home_card_bg">
+
+                <TextView
+                    android:id="@+id/tv_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Height"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_height_val"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="--"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- Weight -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/home_card_bg">
+
+                <TextView
+                    android:id="@+id/tv_weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Weight"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_weight_val"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="--"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- Life Span -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/home_card_bg">
+
+                <TextView
+                    android:id="@+id/tv_life"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Life Span"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_life_val"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="--"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 🔹 About / Temperament / Care Tip -->
+        <LinearLayout
+            android:id="@+id/card_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:background="@drawable/home_card_bg">
+
+            <TextView
+                android:id="@+id/tv_about_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Good With"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_good_with"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Children, Seniors, Dogs, Cats"
+                android:layout_marginTop="6dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <TextView
+                android:id="@+id/tv_temp_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Temperament"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_temperament"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Friendly, Outgoing, Playful"
+                android:layout_marginTop="6dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <TextView
+                android:id="@+id/tv_care_tip_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Care Tip"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_care_tip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Keep coat trimmed and daily short walks."
+                android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <!-- 🔹 Done Button -->
+        <Button
+            android:id="@+id/btn_done_reco"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Done"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:backgroundTint="#6C4DC8"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="18dp" />
+    </LinearLayout>
+</ScrollView>

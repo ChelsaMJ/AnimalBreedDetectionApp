@@ -6,36 +6,44 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.animalbreeddetectionapp.R
 import com.example.animalbreeddetectionapp.dashboard.BreedResultActivity
-import com.example.animalbreeddetectionapp.databinding.FragmentDetectBinding
 import java.io.ByteArrayOutputStream
 
 class DetectFragment : Fragment() {
 
-    private lateinit var binding: FragmentDetectBinding
     private val CAMERA_REQUEST = 101
     private val GALLERY_REQUEST = 102
     private var selectedImageBytes: ByteArray? = null
+
+    private lateinit var imagePreview: ImageView
+    private lateinit var btnCamera: Button
+    private lateinit var btnGallery: Button
+    private lateinit var btnDetect: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentDetectBinding.inflate(inflater, container, false)
+        val view = inflater.inflate(R.layout.fragment_detect, container, false)
 
-        binding.btnCamera.setOnClickListener { openCamera() }
-        binding.btnGallery.setOnClickListener { openGallery() }
+        imagePreview = view.findViewById(R.id.imagePreview)
+        btnCamera = view.findViewById(R.id.btnCamera)
+        btnGallery = view.findViewById(R.id.btnGallery)
+        btnDetect = view.findViewById(R.id.btnDetect)
 
-        binding.btnDetect.setOnClickListener {
+        btnCamera.setOnClickListener { openCamera() }
+        btnGallery.setOnClickListener { openGallery() }
+        btnDetect.setOnClickListener {
             if (selectedImageBytes != null) {
-                // Send the image to BreedResultActivity
                 val intent = Intent(requireContext(), BreedResultActivity::class.java)
                 intent.putExtra("imageBytes", selectedImageBytes)
                 startActivity(intent)
@@ -44,7 +52,7 @@ class DetectFragment : Fragment() {
             }
         }
 
-        return binding.root
+        return view
     }
 
     private fun openCamera() {
@@ -63,12 +71,12 @@ class DetectFragment : Fragment() {
             when (requestCode) {
                 CAMERA_REQUEST -> {
                     val bitmap = data?.extras?.get("data") as Bitmap
-                    binding.imagePreview.setImageBitmap(bitmap)
+                    imagePreview.setImageBitmap(bitmap)
                     selectedImageBytes = convertBitmapToByteArray(bitmap)
                 }
                 GALLERY_REQUEST -> {
                     val imageUri: Uri? = data?.data
-                    binding.imagePreview.setImageURI(imageUri)
+                    imagePreview.setImageURI(imageUri)
 
                     imageUri?.let {
                         val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, it)

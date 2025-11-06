@@ -2,31 +2,41 @@ package com.example.animalbreeddetectionapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.animalbreeddetectionapp.databinding.ActivitySignupBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import kotlin.jvm.java
 
 class Signup : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySignupBinding
     private lateinit var auth: FirebaseAuth
     private val db = FirebaseDatabase.getInstance().getReference("users")
 
+    private lateinit var signupBtn: Button
+    private lateinit var nameInput: EditText
+    private lateinit var emailInput: EditText
+    private lateinit var passwordInput: EditText
+    private lateinit var loginRedirect: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignupBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_signup)
 
         auth = FirebaseAuth.getInstance()
 
-        // Signup Button
-        binding.signupBtn.setOnClickListener {
-            val name = binding.name.text.toString().trim()
-            val email = binding.email.text.toString().trim()
-            val password = binding.password.text.toString().trim()
+        signupBtn = findViewById(R.id.signupBtn)
+        nameInput = findViewById(R.id.name)
+        emailInput = findViewById(R.id.email)
+        passwordInput = findViewById(R.id.password)
+        loginRedirect = findViewById(R.id.loginRedirect)
+
+        signupBtn.setOnClickListener {
+            val name = nameInput.text.toString().trim()
+            val email = emailInput.text.toString().trim()
+            val password = passwordInput.text.toString().trim()
 
             if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
@@ -45,14 +55,17 @@ class Signup : AppCompatActivity() {
                             startActivity(Intent(this, Login::class.java))
                             finish()
                         } else {
-                            Toast.makeText(this, "Signup failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this,
+                                "Signup failed: ${task.exception?.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
             }
         }
 
-        // Redirect to Login
-        binding.loginRedirect.setOnClickListener {
+        loginRedirect.setOnClickListener {
             startActivity(Intent(this, Login::class.java))
         }
     }

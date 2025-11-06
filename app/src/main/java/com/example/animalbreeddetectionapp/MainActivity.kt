@@ -5,23 +5,20 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.animalbreeddetectionapp.databinding.ActivityMainBinding
 import com.example.animalbreeddetectionapp.fragments.DetectFragment
-import com.example.animalbreeddetectionapp.fragments.HomeFragment
+import com.example.animalbreeddetectionapp.fragments.ExploreFragment
 import com.example.animalbreeddetectionapp.fragments.ProfileFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
     private var pressedTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
 
         auth = FirebaseAuth.getInstance()
 
@@ -30,11 +27,17 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
 
-        replaceFragment(HomeFragment())
+        // Use findViewById instead of binding
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
+        // ✅ Set DetectFragment as the default fragment
+        replaceFragment(DetectFragment())
+        bottomNav.selectedItemId = R.id.nav_detect
+
+        // ✅ Handle bottom navigation
+        bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_home -> replaceFragment(HomeFragment())
+                R.id.nav_home -> replaceFragment(ExploreFragment())
                 R.id.nav_detect -> replaceFragment(DetectFragment())
                 R.id.nav_profile -> replaceFragment(ProfileFragment())
             }

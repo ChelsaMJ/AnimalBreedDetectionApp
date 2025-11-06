@@ -3,4 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="teal_700">#018786</color>
+    <color name="purple_600">#6C4DC8</color>
+    <color name="purple_800">#3E2AA8</color>
+    <color name="accent_text">#2E1E5B</color>
+    <color name="muted_text">#6A5D7B</color>
+    <color name="bg_soft">#FBF7FB</color>
 </resources>

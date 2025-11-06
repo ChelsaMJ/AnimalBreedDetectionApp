@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_explore"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FBF7FB"
+    android:padding="16dp"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/ll_explore_root"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_explore_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Find Your Perfect Pet"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#2E1E5B"/>
+
+        <TextView
+            android:id="@+id/tv_explore_sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tell us a few things about your home and lifestyle"
+            android:textSize="13sp"
+            android:layout_marginTop="6dp"
+            android:textColor="#6A5D7B"/>
+
+        <!-- Space -->
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="14dp"
+            android:text="Living space" />
+        <Spinner
+            android:id="@+id/sp_space"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Climate -->
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:text="Climate" />
+        <Spinner
+            android:id="@+id/sp_climate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Pet type -->
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:text="Preferred pet type" />
+        <Spinner
+            android:id="@+id/sp_pet_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Energy -->
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:text="Energy level" />
+        <Spinner
+            android:id="@+id/sp_energy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Maintenance -->
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:text="Maintenance / Price range" />
+        <Spinner
+            android:id="@+id/sp_maintenance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_find_breeds"
+            android:text="Find Breeds"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="18dp"
+            android:backgroundTint="#6C4DC8"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+</ScrollView>

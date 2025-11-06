@@ -2,33 +2,41 @@ package com.example.animalbreeddetectionapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.animalbreeddetectionapp.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 
 class Login : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var loginBtn: Button
+    private lateinit var emailInput: EditText
+    private lateinit var passwordInput: EditText
+    private lateinit var signupRedirect: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
 
-        // 🔄 Auto-login check (if user somehow reaches here while logged in)
+        loginBtn = findViewById(R.id.loginBtn)
+        emailInput = findViewById(R.id.email)
+        passwordInput = findViewById(R.id.password)
+        signupRedirect = findViewById(R.id.signupRedirect)
+
+        // Auto-login check
         auth.currentUser?.let {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
 
-        // Login Button
-        binding.loginBtn.setOnClickListener {
-            val email = binding.email.text.toString().trim()
-            val password = binding.password.text.toString().trim()
+        loginBtn.setOnClickListener {
+            val email = emailInput.text.toString().trim()
+            val password = passwordInput.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
@@ -51,8 +59,7 @@ class Login : AppCompatActivity() {
             }
         }
 
-        // Redirect to Signup
-        binding.signupRedirect.setOnClickListener {
+        signupRedirect.setOnClickListener {
             startActivity(Intent(this, Signup::class.java))
         }
     }

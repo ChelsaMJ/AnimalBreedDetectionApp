@@ -1,94 +1,159 @@
 package com.example.animalbreeddetectionapp.dashboard
 
+import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.animalbreeddetectionapp.databinding.ActivityBreedResultBinding
+import com.example.animalbreeddetectionapp.R
 import com.example.animalbreeddetectionapp.network.GeminiApi
+import java.io.ByteArrayInputStream
 
 class BreedResultActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityBreedResultBinding
+    private lateinit var imgMain: ImageView
+    private lateinit var tvMainTitle: TextView
+    private lateinit var tvMainSub: TextView
+    private lateinit var llBreedList: LinearLayout
+    private lateinit var btnShare: Button
+    private lateinit var btnRescan: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityBreedResultBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_breed_result)
 
-        val imageBytes = intent.getByteArrayExtra("imageBytes")
+        imgMain = findViewById(R.id.img_main)
+        tvMainTitle = findViewById(R.id.tv_main_title)
+        tvMainSub = findViewById(R.id.tv_main_sub)
+        llBreedList = findViewById(R.id.ll_breed_list)
+        btnShare = findViewById(R.id.btn_share)
+        btnRescan = findViewById(R.id.btn_rescan)
 
-        // Hide button initially until result is ready
-        binding.btnAskMore.visibility = View.GONE
+        btnRescan.setOnClickListener { finish() }
 
-        if (imageBytes != null) {
-            val imageBase64 = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
-            analyzeWithGemini(imageBase64)
-        } else {
-            binding.tvBreedResult.text = "❌ No image received."
+        btnShare.setOnClickListener {
+            val shareText = "${tvMainTitle.text}\n\n${tvMainSub.text}"
+            val i = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, shareText)
+            }
+            startActivity(Intent.createChooser(i, "Share breed result"))
         }
 
-        // Repurpose Ask AI button for fun facts
-        binding.btnAskMore.setOnClickListener {
-            showFunFact()
+        val imageBytes = intent.getByteArrayExtra("imageBytes")
+        if (imageBytes != null) {
+            try {
+                val bitmap = BitmapFactory.decodeStream(ByteArrayInputStream(imageBytes))
+                imgMain.setImageBitmap(bitmap)
+            } catch (e: Exception) {
+                imgMain.setImageResource(R.drawable.placeholder)
+            }
+            analyzeWithGemini(imageBytes)
+        } else {
+            tvMainTitle.text = "No image provided"
+            tvMainSub.text = "Please capture or upload an image to detect a breed."
         }
     }
 
-    private fun analyzeWithGemini(imageBase64: String) {
-        binding.lottieView.visibility = View.VISIBLE
-        binding.tvBreedResult.text = "🔍 Analyzing image, please wait..."
+    private fun analyzeWithGemini(imageBytes: ByteArray) {
+        val imageBase64 = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
+        tvMainTitle.text = "Analyzing..."
+        tvMainSub.text = "Please wait while the AI analyzes your image."
+        llBreedList.removeAllViews()
 
         GeminiApi.analyzeBreed(imageBase64, { aiResponse ->
             runOnUiThread {
-                binding.lottieView.visibility = View.GONE
-
-                // Format & animate the AI response
-                binding.tvBreedResult.apply {
-                    alpha = 0f
-                    text = formatAiResponse(aiResponse)
-                    animate().alpha(1f).setDuration(600).start()
+                if (aiResponse.isBlank()) {
+                    tvMainTitle.text = "No breed detected"
+                    tvMainSub.text = "Please try again with a clearer image."
+                    return@runOnUiThread
                 }
 
-                saveToFavorites(aiResponse)
-                binding.btnAskMore.visibility = View.VISIBLE
+                val formatted = formatAiResponse(aiResponse)
+                tvMainTitle.text = extractMainTitle(aiResponse) ?: "Detected Breed"
+                tvMainSub.text = extractMainSubtitle(aiResponse) ?: formatted.take(200)
+
+                val items = parseBreedsWithPercent(aiResponse)
+
+                llBreedList.removeAllViews()
+                if (items.isEmpty()) {
+                    // fallback: show single result card
+                    val v = LayoutInflater.from(this).inflate(R.layout.item_breed_small, llBreedList, false)
+                    v.findViewById<ImageView>(R.id.iv_small).setImageResource(R.drawable.placeholder)
+                    v.findViewById<TextView>(R.id.tv_small_name).text = tvMainTitle.text
+                    v.findViewById<TextView>(R.id.tv_small_pct).text = "Detected"
+                    llBreedList.addView(v)
+                } else {
+                    // show multiple detected breeds
+                    for ((name, pct) in items) {
+                        val row = LayoutInflater.from(this).inflate(R.layout.item_breed_small, llBreedList, false)
+                        val iv = row.findViewById<ImageView>(R.id.iv_small)
+                        val tvName = row.findViewById<TextView>(R.id.tv_small_name)
+                        val tvPct = row.findViewById<TextView>(R.id.tv_small_pct)
+
+                        iv.setImageResource(R.drawable.placeholder)
+                        tvName.text = name
+                        tvPct.text = pct
+                        llBreedList.addView(row)
+                    }
+                }
             }
         }, { error ->
             runOnUiThread {
-                binding.lottieView.visibility = View.GONE
-                binding.tvBreedResult.text = "⚠️ Error: $error"
-                Toast.makeText(this, "AI failed to analyze image", Toast.LENGTH_SHORT).show()
+                tvMainTitle.text = "Analysis failed"
+                tvMainSub.text = "AI error: $error"
+                Toast.makeText(this, "AI Error: $error", Toast.LENGTH_LONG).show()
             }
         })
     }
 
-    // 🧠 Format AI output neatly with emojis & spacing
     private fun formatAiResponse(raw: String): String {
-        var formatted = raw
-            .replace("1️⃣", "🐾 **Breed Name:**")
-            .replace("2️⃣", "\n\n📘 **Description:**")
-            .replace("3️⃣", "\n\n🩺 **Care Tips:**")
-            .replace("**", "") // remove bold markers
-            .replace("*", "• ") // turn list items into bullets
-
-        return formatted.trim()
+        return raw
+            .replace("1️⃣", "Breed Name:")
+            .replace("2️⃣", "\n\nDescription:")
+            .replace("3️⃣", "\n\nCare Tips:")
+            .replace("**", "")
+            .replace("*", "• ")
+            .trim()
     }
 
-    private fun saveToFavorites(result: String) {
-        val prefs = getSharedPreferences("favorites", MODE_PRIVATE)
-        prefs.edit().putString(System.currentTimeMillis().toString(), result).apply()
+    private fun extractMainTitle(raw: String): String? {
+        val bn = Regex("Breed Name[:\\-]?\\s*(.+)", RegexOption.IGNORE_CASE).find(raw)?.groups?.get(1)?.value
+        if (!bn.isNullOrBlank()) return bn.trim()
+        val firstLine = raw.trim().lineSequence().firstOrNull()
+        return firstLine?.takeIf { it.length in 3..40 }?.trim()
     }
 
-    // 🌟 Repurposed "Ask AI More" for fun facts / breed insights
-    private fun showFunFact() {
-        val facts = listOf(
-            "🐾 Fun Fact: Most dogs dream just like humans do!",
-            "🐕 Did you know? A dog’s nose print is as unique as a human fingerprint.",
-            "🐈 Cats spend 70% of their lives sleeping — true relaxation masters!",
-            "🐶 Dogs can understand up to 250 words and gestures!",
-            "🐦 Birds are the only animals with feathers — and some can even mimic human speech!"
-        )
-        val randomFact = facts.random()
-        Toast.makeText(this, randomFact, Toast.LENGTH_LONG).show()
+    private fun extractMainSubtitle(raw: String): String? {
+        val desc = Regex(
+            "Description[:\\-]?\\s*(.+)",
+            setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)
+        ).find(raw)?.groups?.get(1)?.value
+        return desc?.trim()?.takeIf { it.isNotBlank() }?.take(240)
+    }
+
+
+    private fun parseBreedsWithPercent(raw: String): List<Pair<String, String>> {
+        val results = mutableListOf<Pair<String, String>>()
+        val regex = Regex("([A-Za-z0-9\\s\\-]+?)\\s*[\\-–:]?\\s*\\(?([0-9]{1,2}(?:\\.[0-9])?)%\\)?", RegexOption.IGNORE_CASE)
+        for (m in regex.findAll(raw)) {
+            val name = m.groups[1]?.value?.trim() ?: continue
+            val pct = m.groups[2]?.value?.trim()?.plus("%") ?: ""
+            results.add(name to pct)
+        }
+
+        if (results.isEmpty()) {
+            val lines = raw.lines().map { it.trim() }.filter { it.isNotBlank() }
+            for (ln in lines) {
+                val parts = ln.split("—", "-", ":").map { it.trim() }
+                if (parts.size >= 2 && parts.last().contains("%")) {
+                    results.add(parts.first() to parts.last())
+                }
+            }
+        }
+        return results
     }
 }

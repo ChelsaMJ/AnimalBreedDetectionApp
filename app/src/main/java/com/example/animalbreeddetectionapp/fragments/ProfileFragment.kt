@@ -5,15 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.animalbreeddetectionapp.Login
-import com.example.animalbreeddetectionapp.databinding.FragmentProfileBinding
+import com.example.animalbreeddetectionapp.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class ProfileFragment : Fragment() {
 
-    private lateinit var binding: FragmentProfileBinding
+    private lateinit var textName: TextView
+    private lateinit var textEmail: TextView
+    private lateinit var btnLogout: Button
+
     private lateinit var auth: FirebaseAuth
     private lateinit var dbRef: DatabaseReference
 
@@ -22,7 +28,12 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        textName = view.findViewById(R.id.textName)
+        textEmail = view.findViewById(R.id.textEmail)
+        btnLogout = view.findViewById(R.id.btnLogout)
+
         auth = FirebaseAuth.getInstance()
         dbRef = FirebaseDatabase.getInstance().getReference("Users")
 
@@ -31,14 +42,14 @@ class ProfileFragment : Fragment() {
             dbRef.child(uid).get().addOnSuccessListener {
                 val name = it.child("name").value?.toString() ?: "User"
                 val email = auth.currentUser?.email ?: "Unknown"
-                binding.textName.text = name
-                binding.textEmail.text = email
+                textName.text = name
+                textEmail.text = email
             }.addOnFailureListener {
-                binding.textName.text = "Failed to load"
+                textName.text = "Failed to load"
             }
         }
 
-        binding.btnLogout.setOnClickListener {
+        btnLogout.setOnClickListener {
             auth.signOut()
             val intent = Intent(requireContext(), Login::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -46,6 +57,6 @@ class ProfileFragment : Fragment() {
             requireActivity().finish()
         }
 
-        return binding.root
+        return view
     }
 }
