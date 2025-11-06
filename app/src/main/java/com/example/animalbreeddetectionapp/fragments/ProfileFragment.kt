@@ -2,6 +2,7 @@ package com.example.animalbreeddetectionapp.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,8 @@ class ProfileFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var dbRef: DatabaseReference
 
+    private val TAG = "ProfileFragment"
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,18 +38,36 @@ class ProfileFragment : Fragment() {
         btnLogout = view.findViewById(R.id.btnLogout)
 
         auth = FirebaseAuth.getInstance()
-        dbRef = FirebaseDatabase.getInstance().getReference("Users")
+        // IMPORTANT: use the same "users" node as Signup writes to
+        dbRef = FirebaseDatabase.getInstance().getReference("users")
 
         val uid = auth.currentUser?.uid
+        val authDisplayName = auth.currentUser?.displayName
+
         if (uid != null) {
-            dbRef.child(uid).get().addOnSuccessListener {
-                val name = it.child("name").value?.toString() ?: "User"
+            dbRef.child(uid).get().addOnSuccessListener { dataSnapshot ->
+                val dbName = dataSnapshot.child("name").value?.toString()
                 val email = auth.currentUser?.email ?: "Unknown"
-                textName.text = name
+
+                // Choose the best available name: DB -> auth displayName -> "User"
+                val nameToShow = dbName?.takeIf { it.isNotBlank() }
+                    ?: authDisplayName?.takeIf { it.isNotBlank() }
+                    ?: "User"
+
+                Log.d(TAG, "Loaded profile: uid=$uid dbName=$dbName authName=$authDisplayName")
+                textName.text = nameToShow
                 textEmail.text = email
-            }.addOnFailureListener {
-                textName.text = "Failed to load"
+            }.addOnFailureListener { e ->
+                Log.w(TAG, "Failed to read user DB data: ${e.message}", e)
+                // fallback to auth displayName or email
+                textName.text = authDisplayName ?: "User"
+                textEmail.text = auth.currentUser?.email ?: "Unknown"
             }
+        } else {
+            // No logged-in user
+            Log.w(TAG, "No current user found in ProfileFragment")
+            textName.text = auth.currentUser?.displayName ?: "User"
+            textEmail.text = auth.currentUser?.email ?: "Unknown"
         }
 
         btnLogout.setOnClickListener {
