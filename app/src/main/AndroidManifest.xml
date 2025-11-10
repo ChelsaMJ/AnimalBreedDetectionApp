@@ -33,16 +33,28 @@
             android:exported="true" />
         <activity
             android:name=".Login"
-            android:exported="true"></activity>
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true" />
 
-        <activity android:name=".drawer.GuidebookActivity" />
-        <activity android:name=".drawer.FactsActivity" />
-        <activity android:name=".drawer.ChecklistActivity" />
-        <activity android:name=".drawer.AboutAppActivity" />
-        <activity android:name=".drawer.AboutUsActivity" />
+        <activity
+            android:name=".drawer.GuidebookActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".drawer.FactsActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".drawer.ChecklistActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".drawer.AboutAppActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".drawer.AboutUsActivity"
+            android:exported="true"/>
 
         <meta-data
             android:name="preloaded_fonts"
