@@ -38,6 +38,12 @@
             android:name=".MainActivity"
             android:exported="true" />
 
+        <activity android:name=".drawer.GuidebookActivity" />
+        <activity android:name=".drawer.FactsActivity" />
+        <activity android:name=".drawer.ChecklistActivity" />
+        <activity android:name=".drawer.AboutAppActivity" />
+        <activity android:name=".drawer.AboutUsActivity" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

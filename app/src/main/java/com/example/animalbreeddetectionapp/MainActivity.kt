@@ -1,5 +1,6 @@
 package com.example.animalbreeddetectionapp
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
@@ -18,6 +19,12 @@ import com.example.animalbreeddetectionapp.fragments.ExploreFragment
 import com.example.animalbreeddetectionapp.fragments.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import kotlin.jvm.java
+import com.example.animalbreeddetectionapp.drawer.GuidebookActivity
+import com.example.animalbreeddetectionapp.drawer.FactsActivity
+import com.example.animalbreeddetectionapp.drawer.ChecklistActivity
+import com.example.animalbreeddetectionapp.drawer.AboutAppActivity
+import com.example.animalbreeddetectionapp.drawer.AboutUsActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,30 +63,20 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
+        // inside onCreate(), after drawerLayout & navigationView are initialized
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.nav_home -> {
-                    replaceFragment(DetectFragment())
-                }
-                R.id.nav_guidebook -> {
-                    // TODO: open AnimalGuidebookActivity later
-                    Toast.makeText(this, "Open Guidebook (coming soon)", Toast.LENGTH_SHORT).show()
-                }
-                R.id.nav_facts -> {
-                    // TODO: open Facts screen later
-                    Toast.makeText(this, "Open Facts (coming soon)", Toast.LENGTH_SHORT).show()
-                }
-                R.id.nav_favorites -> {
-                    Toast.makeText(this, "Open Favorites (coming soon)", Toast.LENGTH_SHORT).show()
-                }
-                R.id.nav_settings -> {
-                    Toast.makeText(this, "Open Settings (coming soon)", Toast.LENGTH_SHORT).show()
-                }
-
+                R.id.nav_guidebook -> startActivity(Intent(this, GuidebookActivity::class.java))
+                R.id.nav_facts -> startActivity(Intent(this, FactsActivity::class.java))
+                R.id.nav_checklist -> startActivity(Intent(this, ChecklistActivity::class.java))
+                R.id.nav_aboutApp -> startActivity(Intent(this, AboutAppActivity::class.java))
+                R.id.nav_aboutUs -> startActivity(Intent(this, AboutUsActivity::class.java))
+                else -> {}
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
 
         // Bottom nav - keep your existing setup
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)

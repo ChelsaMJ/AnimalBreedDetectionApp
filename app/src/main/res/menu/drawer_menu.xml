@@ -12,9 +12,9 @@
             android:icon="@drawable/ic_facts" />
 
         <item
-            android:id="@+id/nav_favorites"
-            android:title="Favorites"
-            android:icon="@drawable/ic_launcher_background" />
+            android:id="@+id/nav_checklist"
+            android:title="Checklist"
+            android:icon="@drawable/ic_checklist" />
 
         <item
             android:id="@+id/nav_aboutApp"
