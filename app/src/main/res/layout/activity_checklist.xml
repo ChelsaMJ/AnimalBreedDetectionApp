@@ -5,6 +5,7 @@
     android:padding="20dp"
     android:background="@color/white">
 
+
     <!-- Title TextView -->
     <TextView
         android:id="@+id/titleText"

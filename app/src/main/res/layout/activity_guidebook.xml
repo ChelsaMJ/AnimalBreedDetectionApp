@@ -1,14 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:padding="20dp"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-    <!-- Expand later: searchable list, recyclerView, categories -->
-    <TextView
+
+    <!-- Scrollable guide content -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Guidebook — list of animals and details will appear here."
-        android:textSize="16sp"/>
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/ic_logo"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Welcome to Chimera 🐾"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This quick guide will help you understand how to use Chimera effectively and explore its key features."
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="20dp"
+                android:gravity="center" />
+
+            <!-- Step 1 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1️⃣  Detect Animal Breeds"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Go to the Detect page and capture or upload an image of an animal. Chimera’s AI model will instantly analyze the image and display the detected breed with detailed information."
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Step 2 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2️⃣  Explore Animal Facts"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Visit the Facts section to learn interesting facts about various animals. Choose from the dropdown to discover fun insights about each species."
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Step 3 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3️⃣  Use the Checklist"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Keep track of your animal exploration tasks or pet-care goals with the built-in checklist. You can add, check, or remove items anytime — your progress is saved automatically!"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Step 4 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="4️⃣  Customize and Learn"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Visit the About App and About Us sections to learn about Chimera’s story and the team behind it. Stay tuned for upcoming features like dark mode, AI chat, and AR animal visualization!"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Step 5 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5️⃣  Explore and Share"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chimera is designed for animal lovers and curious minds. Detect, learn, and share your discoveries with others to spread awareness and love for wildlife!"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Footer -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Happy Exploring! 🌿"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:layout_marginTop="10dp" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

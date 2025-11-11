@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
         bottomNav.setOnItemSelectedListener { item ->
             val fragment: Fragment = when (item.itemId) {
-                R.id.nav_home -> ExploreFragment()
+                R.id.nav_find -> ExploreFragment()
                 R.id.nav_detect -> DetectFragment()
                 R.id.nav_profile -> ProfileFragment()
                 else -> DetectFragment()

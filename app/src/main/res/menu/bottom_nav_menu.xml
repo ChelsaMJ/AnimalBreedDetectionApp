@@ -7,9 +7,9 @@
         android:title="Detect" />
 
     <item
-        android:id="@+id/nav_home"
+        android:id="@+id/nav_find"
         android:icon="@drawable/ic_explore"
-        android:title="Explore" />
+        android:title="Find" />
 
     <item
         android:id="@+id/nav_profile"
